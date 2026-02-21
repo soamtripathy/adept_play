@@ -1,726 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adept Play — Download the App</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        :root {
-            --yellow: #FACC15;
-            --orange: #F97316;
-            --dark: #030712;
-            --dark2: #0f172a;
-            --dark3: #1e293b;
-            --gray: #94a3b8;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            background-color: var(--dark);
-            color: #fff;
-            font-family: 'Syne', sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* ── NOISE TEXTURE OVERLAY ── */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.5;
-        }
-
-        /* ── GLOW BLOBS ── */
-        .blob {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(120px);
-            opacity: 0.12;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .blob-1 { width: 600px; height: 600px; background: var(--yellow); top: -200px; left: -200px; }
-        .blob-2 { width: 500px; height: 500px; background: var(--orange); bottom: -150px; right: -150px; }
-        .blob-3 { width: 300px; height: 300px; background: var(--yellow); top: 50%; left: 50%; transform: translate(-50%,-50%); opacity: 0.06; }
-
-        /* ── LAYOUT ── */
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 24px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ── NAVBAR ── */
-        nav {
-            padding: 24px 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-            z-index: 10;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-
-        .logo-icon {
-            width: 40px; height: 40px;
-            background: linear-gradient(135deg, var(--yellow), var(--orange));
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px;
-            color: var(--dark);
-        }
-
-        .logo-text {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 26px;
-            letter-spacing: 2px;
-            color: #fff;
-        }
-
-        .logo-text span { color: var(--yellow); }
-
-        .nav-contact {
-            color: var(--gray);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: color 0.2s;
-        }
-        .nav-contact:hover { color: var(--yellow); }
-
-        /* ── HERO ── */
-        .hero {
-            padding: 80px 0 60px;
-            text-align: center;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(250,204,21,0.1);
-            border: 1px solid rgba(250,204,21,0.25);
-            border-radius: 100px;
-            padding: 6px 16px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--yellow);
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            margin-bottom: 32px;
-            animation: fadeDown 0.6s ease both;
-        }
-
-        .hero-badge i { font-size: 10px; }
-
-        .hero h1 {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(64px, 12vw, 110px);
-            line-height: 0.9;
-            letter-spacing: 3px;
-            animation: fadeUp 0.7s ease 0.1s both;
-        }
-
-        .hero h1 .highlight {
-            -webkit-text-fill-color: transparent;
-            -webkit-text-stroke: 2px var(--yellow);
-        }
-
-        .hero-sub {
-            color: var(--gray);
-            font-size: 17px;
-            font-weight: 400;
-            max-width: 480px;
-            margin: 24px auto 48px;
-            line-height: 1.7;
-            animation: fadeUp 0.7s ease 0.2s both;
-        }
-
-        /* ── DOWNLOAD BUTTON ── */
-        .btn-download {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            background: linear-gradient(135deg, var(--yellow), var(--orange));
-            color: var(--dark);
-            text-decoration: none;
-            font-weight: 800;
-            font-size: 16px;
-            padding: 18px 40px;
-            border-radius: 16px;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 40px rgba(250,204,21,0.25);
-            animation: fadeUp 0.7s ease 0.3s both;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-download::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, #fff2, transparent);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .btn-download:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 50px rgba(250,204,21,0.4);
-        }
-
-        .btn-download:hover::before { opacity: 1; }
-
-        .btn-download .btn-icon {
-            width: 36px; height: 36px;
-            background: rgba(0,0,0,0.15);
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px;
-        }
-
-        .btn-meta {
-            text-align: left;
-            line-height: 1.2;
-        }
-
-        .btn-meta small {
-            display: block;
-            font-size: 10px;
-            font-weight: 600;
-            opacity: 0.7;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .file-info {
-            color: var(--gray);
-            font-size: 12px;
-            margin-top: 14px;
-            animation: fadeUp 0.7s ease 0.4s both;
-        }
-
-        .file-info i { color: var(--yellow); margin-right: 4px; }
-
-        /* ── PHONE MOCKUP ── */
-        .mockup-wrap {
-            position: relative;
-            margin: 60px auto 0;
-            max-width: 260px;
-            animation: float 4s ease-in-out infinite, fadeUp 0.8s ease 0.4s both;
-        }
-
-        .mockup-glow {
-            position: absolute;
-            inset: -40px;
-            background: radial-gradient(ellipse, rgba(250,204,21,0.15), transparent 70%);
-            border-radius: 50%;
-        }
-
-        .phone {
-            background: var(--dark2);
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 36px;
-            padding: 12px;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.6);
-            position: relative;
-        }
-
-        .phone-notch {
-            width: 80px; height: 24px;
-            background: var(--dark);
-            border-radius: 0 0 16px 16px;
-            margin: 0 auto 8px;
-        }
-
-        .phone-screen {
-            background: linear-gradient(160deg, #0f172a, #030712);
-            border-radius: 26px;
-            padding: 24px 20px;
-            min-height: 420px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .screen-logo {
-            width: 64px; height: 64px;
-            background: linear-gradient(135deg, var(--yellow), var(--orange));
-            border-radius: 18px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 28px;
-            color: var(--dark);
-            margin-top: 12px;
-        }
-
-        .screen-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 26px;
-            letter-spacing: 2px;
-            color: #fff;
-        }
-
-        .screen-title span { color: var(--yellow); }
-
-        .screen-tagline {
-            color: var(--gray);
-            font-size: 11px;
-            text-align: center;
-        }
-
-        .screen-card {
-            width: 100%;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
-            padding: 14px;
-        }
-
-        .screen-card-label {
-            color: var(--gray);
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .screen-card-val {
-            color: var(--yellow);
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 22px;
-            letter-spacing: 1px;
-        }
-
-        .screen-btn {
-            width: 100%;
-            background: linear-gradient(135deg, var(--yellow), var(--orange));
-            color: var(--dark);
-            font-weight: 800;
-            font-size: 12px;
-            border: none;
-            border-radius: 12px;
-            padding: 12px;
-            cursor: pointer;
-            margin-top: auto;
-        }
-
-        /* ── DIVIDER ── */
-        .divider {
-            border: none;
-            border-top: 1px solid rgba(255,255,255,0.06);
-            margin: 80px 0;
-        }
-
-        /* ── SECTION TITLE ── */
-        .section-label {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--yellow);
-            margin-bottom: 12px;
-        }
-
-        .section-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(36px, 6vw, 52px);
-            letter-spacing: 2px;
-            line-height: 1;
-            margin-bottom: 16px;
-        }
-
-        .section-desc {
-            color: var(--gray);
-            font-size: 15px;
-            line-height: 1.7;
-            max-width: 500px;
-        }
-
-        /* ── INSTALL STEPS ── */
-        .steps {
-            display: grid;
-            gap: 16px;
-            margin-top: 40px;
-        }
-
-        .step {
-            display: flex;
-            align-items: flex-start;
-            gap: 20px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 20px;
-            padding: 24px;
-            transition: border-color 0.3s, transform 0.3s;
-        }
-
-        .step:hover {
-            border-color: rgba(250,204,21,0.2);
-            transform: translateX(4px);
-        }
-
-        .step-num {
-            width: 44px; height: 44px;
-            background: linear-gradient(135deg, var(--yellow), var(--orange));
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 22px;
-            color: var(--dark);
-            flex-shrink: 0;
-        }
-
-        .step-content h3 {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .step-content p {
-            color: var(--gray);
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .step-content code {
-            background: rgba(250,204,21,0.1);
-            color: var(--yellow);
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-family: monospace;
-        }
-
-        /* ── CONTACT ── */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-top: 40px;
-        }
-
-        .contact-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 20px;
-            padding: 28px 24px;
-            text-decoration: none;
-            color: #fff;
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .contact-card:hover {
-            border-color: rgba(250,204,21,0.3);
-            background: rgba(250,204,21,0.05);
-            transform: translateY(-4px);
-        }
-
-        .contact-icon {
-            width: 48px; height: 48px;
-            background: rgba(250,204,21,0.1);
-            border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 20px;
-            color: var(--yellow);
-        }
-
-        .contact-label {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--gray);
-        }
-
-        .contact-value {
-            font-size: 15px;
-            font-weight: 700;
-        }
-
-        .contact-arrow {
-            color: var(--gray);
-            font-size: 12px;
-            margin-top: auto;
-            transition: color 0.2s, transform 0.2s;
-        }
-
-        .contact-card:hover .contact-arrow {
-            color: var(--yellow);
-            transform: translateX(4px);
-        }
-
-        /* ── FOOTER ── */
-        footer {
-            padding: 40px 0;
-            border-top: 1px solid rgba(255,255,255,0.06);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: gap;
-            gap: 16px;
-        }
-
-        .footer-logo {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 22px;
-            letter-spacing: 2px;
-            color: rgba(255,255,255,0.3);
-        }
-
-        .footer-logo span { color: rgba(250,204,21,0.4); }
-
-        .footer-copy {
-            color: rgba(255,255,255,0.2);
-            font-size: 12px;
-        }
-
-        /* ── ANIMATIONS ── */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(24px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeDown {
-            from { opacity: 0; transform: translateY(-12px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50%       { transform: translateY(-16px); }
-        }
-
-        /* ── SCROLL REVEAL ── */
-        .reveal {
-            opacity: 0;
-            transform: translateY(32px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 600px) {
-            .hero { padding: 48px 0 40px; }
-            footer { flex-direction: column; text-align: center; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Adept Play - Join live tournaments, compete with real players and win real prizes. Download now for Android.">
+<meta name="keywords" content="Adept Play, gaming app, tournaments, win money, android apk">
+<meta name="author" content="Adept Play">
+<title>Adept Play — Download Now</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+--yellow:#FACC15;
+--orange:#F97316;
+--dark:#030712;
+--dark2:#0f172a;
+--dark3:#1e293b;
+--gray:#94a3b8;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+background:var(--dark);
+color:#fff;
+font-family:'Syne',sans-serif;
+overflow-x:hidden;
+line-height:1.6;
+}
+
+/* Background Glow */
+body::before{
+content:'';
+position:fixed;
+inset:0;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+pointer-events:none;
+opacity:.4;
+z-index:0;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+padding:0 24px;
+position:relative;
+z-index:1;
+}
+
+/* NAV */
+nav{
+padding:24px 0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:10px;
+text-decoration:none;
+}
+
+.logo-icon{
+width:42px;
+height:42px;
+background:linear-gradient(135deg,var(--yellow),var(--orange));
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+color:var(--dark);
+font-size:20px;
+}
+
+.logo-text{
+font-family:'Bebas Neue',sans-serif;
+font-size:28px;
+letter-spacing:2px;
+color:#fff;
+}
+
+.logo-text span{
+color:var(--yellow);
+}
+
+.nav-contact{
+font-size:14px;
+color:var(--gray);
+text-decoration:none;
+transition:.3s;
+}
+
+.nav-contact:hover{
+color:var(--yellow);
+}
+
+/* HERO */
+.hero{
+text-align:center;
+padding:80px 0;
+}
+
+.hero h1{
+font-family:'Bebas Neue',sans-serif;
+font-size:clamp(60px,10vw,110px);
+letter-spacing:3px;
+line-height:.9;
+}
+
+.highlight{
+-webkit-text-fill-color:transparent;
+-webkit-text-stroke:2px var(--yellow);
+}
+
+.hero-sub{
+color:var(--gray);
+max-width:500px;
+margin:24px auto 40px;
+}
+
+/* BUTTON */
+.btn-download{
+display:inline-flex;
+align-items:center;
+gap:12px;
+padding:18px 42px;
+border-radius:16px;
+background:linear-gradient(135deg,var(--yellow),var(--orange));
+color:var(--dark);
+font-weight:800;
+text-decoration:none;
+transition:.3s;
+box-shadow:0 10px 40px rgba(250,204,21,.25);
+}
+
+.btn-download:hover{
+transform:translateY(-4px);
+box-shadow:0 15px 50px rgba(250,204,21,.4);
+}
+
+.btn-meta small{
+display:block;
+font-size:10px;
+text-transform:uppercase;
+opacity:.7;
+}
+
+/* SECTION */
+.section{
+padding:80px 0;
+}
+
+.section-title{
+font-family:'Bebas Neue',sans-serif;
+font-size:48px;
+letter-spacing:2px;
+margin-bottom:16px;
+}
+
+.section-desc{
+color:var(--gray);
+max-width:550px;
+}
+
+/* STEPS */
+.steps{
+margin-top:40px;
+display:grid;
+gap:18px;
+}
+
+.step{
+display:flex;
+gap:18px;
+background:rgba(255,255,255,.03);
+border:1px solid rgba(255,255,255,.08);
+padding:22px;
+border-radius:18px;
+transition:.3s;
+}
+
+.step:hover{
+border-color:rgba(250,204,21,.3);
+transform:translateX(6px);
+}
+
+.step-num{
+min-width:44px;
+height:44px;
+background:linear-gradient(135deg,var(--yellow),var(--orange));
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-family:'Bebas Neue',sans-serif;
+font-size:22px;
+color:var(--dark);
+}
+
+footer{
+border-top:1px solid rgba(255,255,255,.08);
+padding:30px 0;
+text-align:center;
+color:rgba(255,255,255,.4);
+font-size:13px;
+margin-top:60px;
+}
+
+/* Responsive */
+@media(max-width:600px){
+.hero{
+padding:60px 0;
+}
+.step{
+flex-direction:column;
+}
+}
+</style>
 </head>
+
 <body>
 
-    <!-- Background blobs -->
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
+<div class="container">
 
-    <div class="container">
+<nav>
+<a href="#" class="logo">
+<div class="logo-icon"><i class="fas fa-gamepad"></i></div>
+<span class="logo-text">Adept <span>Play</span></span>
+</a>
+<a href="#contact" class="nav-contact">Support ↓</a>
+</nav>
 
-        <!-- NAV -->
-        <nav>
-            <a href="#" class="logo">
-                <div class="logo-icon"><i class="fas fa-gamepad"></i></div>
-                <span class="logo-text">Adept <span>Play</span></span>
-            </a>
-            <a href="#contact" class="nav-contact">Contact &amp; Support ↓</a>
-        </nav>
+<section class="hero">
+<h1>
+BATTLE.<br>
+WIN.<br>
+<span class="highlight">REPEAT.</span>
+</h1>
 
-        <!-- HERO -->
-        <section class="hero">
-            <div class="hero-badge">
-                <i class="fas fa-fire"></i> Now Available on Android
-            </div>
+<p class="hero-sub">
+Join live tournaments, compete with real players and win real prize money directly from your Android device.
+</p>
 
-            <h1>
-                BATTLE.<br>
-                WIN.<br>
-                <span class="highlight">REPEAT.</span>
-            </h1>
+<a href="https://github.com/soamtripathy/adept_play/releases/download/v1.0/adeptplay.apk" 
+class="btn-download"
+download>
+<div><i class="fab fa-android"></i></div>
+<div class="btn-meta">
+<small>Free Download</small>
+Download APK
+</div>
+</a>
 
-            <p class="hero-sub">
-                Join live tournaments, compete with real players, and win real prize money — right from your phone.
-            </p>
+</section>
 
-            <a href="https://github.com/soamtripathy/adept_play/releases/download/v1.0/adeptplay.apk" class="btn-download" id="downloadBtn">
-                <div class="btn-icon"><i class="fab fa-android"></i></div>
-                <div class="btn-meta">
-                    <small>Free Download</small>
-                    Download APK
-                </div>
-                <i class="fas fa-arrow-down"></i>
-            </a>
+<section class="section">
+<h2 class="section-title">HOW TO INSTALL</h2>
+<p class="section-desc">Follow these quick steps to install Adept Play on your Android device.</p>
 
-            <p class="file-info">
-                <i class="fas fa-shield-alt"></i> Safe &amp; Secure &nbsp;·&nbsp;
-                <i class="fas fa-mobile-alt"></i> Android 6.0+
-            </p>
+<div class="steps">
+<div class="step">
+<div class="step-num">1</div>
+<div>Download the APK file using the button above.</div>
+</div>
 
-            <!-- Phone Mockup -->
-            <div class="mockup-wrap">
-                <div class="mockup-glow"></div>
-                <div class="phone">
-                    <div class="phone-notch"></div>
-                    <div class="phone-screen">
-                        <div class="screen-logo"><i class="fas fa-gamepad"></i></div>
-                        <div class="screen-title">Adept <span>Play</span></div>
-                        <div class="screen-tagline">Battle · Win · Repeat</div>
-                        <div class="screen-card">
-                            <div class="screen-card-label">🔥 Live Tournament</div>
-                            <div class="screen-card-val">₹5,000 Prize</div>
-                        </div>
-                        <div class="screen-card">
-                            <div class="screen-card-label">💰 Your Balance</div>
-                            <div class="screen-card-val">₹1,250.00</div>
-                        </div>
-                        <button class="screen-btn">Join Now →</button>
-                    </div>
-                </div>
-            </div>
-        </section>
+<div class="step">
+<div class="step-num">2</div>
+<div>Enable <strong>Install Unknown Apps</strong> in your device settings.</div>
+</div>
 
-        <hr class="divider">
+<div class="step">
+<div class="step-num">3</div>
+<div>Open the downloaded file and tap <strong>Install</strong>.</div>
+</div>
 
-        <!-- HOW TO INSTALL -->
-        <section class="reveal">
-            <p class="section-label"><i class="fas fa-download mr-1"></i> Installation</p>
-            <h2 class="section-title">HOW TO INSTALL</h2>
-            <p class="section-desc">Installing an APK takes less than a minute. Just follow these simple steps.</p>
+<div class="step">
+<div class="step-num">4</div>
+<div>Launch the app and start playing.</div>
+</div>
+</div>
+</section>
 
-            <div class="steps">
-                <div class="step">
-                    <div class="step-num">1</div>
-                    <div class="step-content">
-                        <h3>Download the APK</h3>
-                        <p>Tap the <strong>Download APK</strong> button above. The file will download to your phone's storage.</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">2</div>
-                    <div class="step-content">
-                        <h3>Allow Unknown Sources</h3>
-                        <p>Go to <code>Settings → Security</code> (or <code>Install Unknown Apps</code>) and allow installs from your browser or file manager.</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">3</div>
-                    <div class="step-content">
-                        <h3>Open the Downloaded File</h3>
-                        <p>Open your notification bar or file manager, find <code>AdeptPlay.apk</code> and tap it to begin installation.</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">4</div>
-                    <div class="step-content">
-                        <h3>Tap Install &amp; Launch</h3>
-                        <p>Tap <strong>Install</strong> on the prompt. Once done, open the app, create your account and start playing!</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+<footer>
+© <span id="year"></span> Adept Play. All rights reserved.
+</footer>
 
-        <hr class="divider">
+</div>
 
-        <!-- CONTACT -->
-        <section class="reveal" id="contact">
-            <p class="section-label"><i class="fas fa-headset"></i> Support</p>
-            <h2 class="section-title">CONTACT US</h2>
-            <p class="section-desc">Have a question or issue? Reach out to us anytime — we're happy to help.</p>
-
-            <div class="contact-grid">
-                <a href="https://t.me/adeptplayofficial" target="_blank" class="contact-card">
-                    <div class="contact-icon"><i class="fab fa-telegram"></i></div>
-                    <div>
-                        <div class="contact-label">Telegram Channel</div>
-                        <div class="contact-value">@adeptplayofficial</div>
-                    </div>
-                    <div class="contact-arrow">Open Telegram →</div>
-                </a>
-                <a href="https://t.me/adeptplay_group" target="_blank" class="contact-card">
-                    <div class="contact-icon"><i class="fas fa-users"></i></div>
-                    <div>
-                        <div class="contact-label">Community Group</div>
-                        <div class="contact-value">@adeptcode_group</div>
-                    </div>
-                    <div class="contact-arrow">Join Group →</div>
-                </a>
-                <a href="https://www.youtube.com/@adeptplayofficial" target="_blank" class="contact-card">
-                    <div class="contact-icon"><i class="fab fa-youtube"></i></div>
-                    <div>
-                        <div class="contact-label">YouTube</div>
-                        <div class="contact-value">Adept Play</div>
-                    </div>
-                    <div class="contact-arrow">Watch Tutorials →</div>
-                </a>
-                <a href="https://t.me/dibyamax" target="_blank" class="contact-card">
-                    <div class="contact-icon"><i class="fas fa-user-shield"></i></div>
-                    <div>
-                        <div class="contact-label">Direct Support</div>
-                        <div class="contact-value">@dibyamax</div>
-                    </div>
-                    <div class="contact-arrow">Message Owner →</div>
-                </a>
-            </div>
-        </section>
-
-        <hr class="divider">
-
-        <!-- FOOTER -->
-        <footer>
-            <div class="footer-logo">Adept <span>Play</span></div>
-            <div class="footer-copy">&copy; <span id="year"></span> Adept Play. All rights reserved.</div>
-        </footer>
-
-    </div>
-
-    <script>
-        // Year
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        // Scroll reveal
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(e => {
-                if (e.isIntersecting) {
-                    e.target.classList.add('visible');
-                    observer.unobserve(e.target);
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-        // Download button click tracker
-        document.getElementById('downloadBtn').addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-            if (href === 'https://github.com/soamtripathy/adept_play/releases/download/v1.0/adeptplay.apk') {
-                e.preventDefault();
-                alert('Download link coming soon!');
-            }
-        });
-    </script>
+<script>
+document.getElementById("year").textContent=new Date().getFullYear();
+</script>
 
 </body>
 </html>
