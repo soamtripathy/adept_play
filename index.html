@@ -213,6 +213,56 @@ font-family:'Bebas Neue',sans-serif;
 font-size:22px;
 color:var(--dark);
 }
+  /* CONTACT */
+.contact-grid{
+margin-top:40px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:20px;
+}
+
+.contact-card{
+display:flex;
+gap:16px;
+align-items:center;
+padding:22px;
+border-radius:18px;
+background:rgba(255,255,255,0.04);
+border:1px solid rgba(255,255,255,0.08);
+text-decoration:none;
+color:#fff;
+transition:all .3s ease;
+}
+
+.contact-card:hover{
+transform:translateY(-6px);
+border-color:rgba(250,204,21,.4);
+background:rgba(250,204,21,0.08);
+}
+
+.contact-icon{
+width:50px;
+height:50px;
+border-radius:14px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:rgba(250,204,21,0.15);
+color:var(--yellow);
+font-size:20px;
+}
+
+.contact-label{
+font-size:12px;
+text-transform:uppercase;
+letter-spacing:1px;
+color:var(--gray);
+}
+
+.contact-value{
+font-size:15px;
+font-weight:700;
+}
 
 footer{
 border-top:1px solid rgba(255,255,255,.08);
@@ -296,6 +346,41 @@ Download APK
 </div>
 </div>
 </section>
+  <section class="section" id="contact">
+  <h2 class="section-title">CONTACT US</h2>
+  <p class="section-desc">
+    Have questions or facing any issue? Our support team is ready to help you.
+  </p>
+
+  <div class="contact-grid">
+
+    <a href="mailto:support@adeptplay.com" class="contact-card">
+      <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+      <div>
+        <div class="contact-label">Email Support</div>
+        <div class="contact-value">support@adeptplay.com</div>
+      </div>
+    </a>
+
+    <a href="https://wa.me/919999999999" target="_blank" class="contact-card">
+      <div class="contact-icon"><i class="fab fa-whatsapp"></i></div>
+      <div>
+        <div class="contact-label">WhatsApp</div>
+        <div class="contact-value">+91 99999 99999</div>
+      </div>
+    </a>
+
+    <a href="https://t.me/adeptplayofficial" target="_blank" class="contact-card">
+      <div class="contact-icon"><i class="fab fa-telegram"></i></div>
+      <div>
+        <div class="contact-label">Telegram Channel</div>
+        <div class="contact-value">@adeptplayofficial</div>
+      </div>
+    </a>
+
+  </div>
+</section>
+  
 
 <footer>
 © <span id="year"></span> Adept Play. All rights reserved.
